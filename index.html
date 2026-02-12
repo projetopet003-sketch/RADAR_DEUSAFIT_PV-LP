@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Radar DeusaFit | Bio-Scanner VFC</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- ESTÉTICA NEON NOIR (BIOHACKER ELITE) --- */
+        :root {
+            --bg-color: #050505;
+            --card-bg: #0f0f0f;
+            --neon-cyan: #00f3ff;
+            --neon-green: #0aff00;
+            --neon-red: #ff003c;
+            --neon-amber: #ffae00;
+            --neon-purple: #bd00ff;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .tech-font {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 15px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        /* --- HEADER & VSL --- */
+        .logo-area {
+            margin-bottom: 20px;
+            padding-top: 10px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
+        }
+        .logo-text {
+            color: var(--neon-cyan);
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .vsl-container {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            margin: 0 auto 25px auto;
+            background: #000;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .vsl-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(20,20,20,1) 0%, rgba(0,0,0,1) 100%);
+            cursor: pointer;
+        }
+        .play-btn {
+            font-size: 4rem;
+            color: white;
+            filter: drop-shadow(0 0 10px var(--neon-cyan));
+            animation: pulse 2s infinite;
+        }
+
+        /* --- QUIZ SECTION --- */
+        .quiz-box {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 25px 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #q1 .tech-font { color: var(--neon-cyan); text-shadow: 0 0 10px rgba(0, 243, 255, 0.3); }
+        #q2 .tech-font { color: var(--neon-purple); text-shadow: 0 0 10px rgba(189, 0, 255, 0.3); }
+        #q3 .tech-font { color: var(--neon-green); text-shadow: 0 0 10px rgba(10, 255, 0, 0.3); }
+        #q4 .tech-font { color: var(--neon-amber); text-shadow: 0 0 10px rgba(255, 174, 0, 0.3); }
+        #q5 .tech-font { color: var(--neon-red); text-shadow: 0 0 10px rgba(255, 0, 60, 0.3); }
+
+        .question-step { display: none; position: relative; z-index: 3; }
+        .question-step.active { display: block; animation: fadeIn 0.5s; }
+
+        .btn-option {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin: 12px 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid #444;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            padding-left: 20px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .btn-option:hover, .btn-option:active {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-weight: bold;
+            transform: translateX(5px);
+        }
+
+        /* --- DIAGNOSTIC RESULTS --- */
+        .result-section {
+            display: none;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            background: #080808;
+            border: 2px solid #333;
+        }
+
+        .result-critical { border-color: var(--neon-red); box-shadow: 0 0 30px rgba(255, 0, 60, 0.2); }
+        .text-critical { color: var(--neon-red); text-shadow: 0 0 15px var(--neon-red); }
+
+        .result-moderate { border-color: var(--neon-amber); box-shadow: 0 0 30px rgba(255, 174, 0, 0.2); }
+        .text-moderate { color: var(--neon-amber); text-shadow: 0 0 15px var(--neon-amber); }
+
+        .result-light { border-color: var(--neon-green); box-shadow: 0 0 30px rgba(10, 255, 0, 0.2); }
+        .text-light { color: var(--neon-green); text-shadow: 0 0 15px var(--neon-green); }
+
+        /* --- OFFER SECTION --- */
+        .offer-container {
+            display: none;
+            margin-top: 40px;
+            text-align: center;
+            animation: fadeIn 1s;
+        }
+        
+        .mockup-img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.2));
+        }
+
+        /* FEATURES GRID */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 25px 0;
+            text-align: left;
+        }
+        .feature-card {
+            background: linear-gradient(145deg, #161616, #0a0a0a);
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .f-icon { font-size: 1.4rem; margin-right: 12px; min-width: 30px; text-align: center; }
+        .f-title { color: white; font-weight: bold; font-size: 0.95rem; display: block; margin-bottom: 2px; font-family: 'Orbitron', sans-serif; }
+        .f-desc { color: #888; font-size: 0.8rem; line-height: 1.2; }
+
+        .price-tag {
+            font-size: 1.2rem;
+            margin: 30px 0 15px;
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--neon-green);
+            box-shadow: 0 0 20px rgba(10, 255, 0, 0.1);
+        }
+        .price-new { color: var(--neon-green); font-weight: 900; font-size: 2.2rem; display: block; margin-top: 5px; text-shadow: 0 0 15px rgba(10,255,0,0.4); }
+
+        .cta-btn {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+            font-weight: 900;
+            padding: 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            display: block;
+            width: 100%;
+            box-shadow: 0 0 30px rgba(0, 198, 255, 0.4);
+            animation: pulse 2s infinite;
+            border: 2px solid white;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            box-sizing: border-box;
+        }
+
+        /* --- DEV NOTE --- */
+        .dev-note-box {
+            background: #000;
+            border: 1px solid #222;
+            border-left: 4px solid var(--neon-green);
+            padding: 20px;
+            margin: 50px 0 30px 0;
+            position: relative;
+            box-shadow: 0 0 20px rgba(10, 255, 0, 0.05);
+            text-align: left;
+        }
+        .dev-title { color: var(--neon-green); font-size: 0.9rem; letter-spacing: 1px; font-weight: 900; }
+        .highlight-text { color: white; background: rgba(10, 255, 0, 0.15); padding: 2px 5px; border-radius: 4px; font-weight: bold;}
+
+        /* --- POPUP --- */
+        .popup-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999;
+            justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        }
+        .popup-box {
+            background: #111; border: 2px solid var(--neon-cyan); padding: 25px 15px;
+            width: 90%; max-width: 380px; text-align: center; border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
+            position: relative;
+        }
+        
+        .input-group { margin: 15px 0; text-align: left; }
+        .lead-input {
+            width: 100%; padding: 15px; background: #050505; border: 1px solid #444;
+            color: white; border-radius: 8px; font-size: 1rem; outline: none;
+            box-sizing: border-box; transition: 0.3s;
+        }
+        .lead-input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,243,255,0.2); }
+        
+        .btn-submit {
+            width: 100%; padding: 18px; background: var(--neon-green); color: black;
+            font-weight: 900; border: none; cursor: pointer;
+            font-family: 'Orbitron', sans-serif; text-transform: uppercase;
+            border-radius: 8px; font-size: 1rem;
+        }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        footer { margin-top: 60px; font-size: 0.7rem; color: #555; border-top: 1px solid #222; padding-top: 20px; }
+        footer a { color: #777; text-decoration: none; margin: 0 5px; }
+        .disclaimer { max-width: 400px; margin: 20px auto 0; color: #444; line-height: 1.4; font-size: 0.65rem; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="logo-area">
+        <h2 class="logo-text">⚡ RADAR DEUSAFIT</h2>
+        <p style="font-size: 0.75rem; letter-spacing: 2px; color: var(--text-dim); margin-top:5px; text-transform:uppercase;">Tecnología Bio-Hacker v14.5</p>
+    </div>
+
+    <div class="vsl-container">
+        <div class="vsl-placeholder" onclick="alert('Player de Video: Coloque o link aqui')">
+            <div class="play-btn">▶</div>
+        </div>
+    </div>
+    <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: -20px; margin-bottom: 30px;">
+        🔊 <span style="font-style: italic;">Activa el sonido para el briefing de la misión.</span>
+    </p>
+
+    <div id="quiz-container" class="quiz-box">
+        <div style="background:#222; height:6px; width:100%; margin-bottom:25px; border-radius: 4px;">
+            <div id="progress-bar" style="background:var(--neon-cyan); height:100%; width:20%; border-radius: 4px; box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.5s;"></div>
+        </div>
+
+        <div class="question-step active" id="q1">
+            <h3 class="tech-font">Fase 1: SCANNER FACIAL</h3>
+            <p style="font-size:1.1rem; line-height:1.4; margin-bottom:20px;">¿Sientes tu rostro hinchado al despertar ("Cara de Luna") aunque no hayas subido de peso?</p>
+            <button class="btn-option" onclick="nextQ(true, 1)">[ SI ] Hinchazón evidente</button>
+            <button class="btn-option" onclick="nextQ(false, 1)">[ NO ] Rostro normal</button>
+        </div>
+
+        <div class="question-step" id="q2">
+            <h3 class="tech-font">Fase 2: SCANNER ABDOMINAL</h3>
+            <p style="font-size:1.1rem; line-height:1.4; margin-bottom:20px;">¿Tu abdomen se pone duro y dilatado al final del día?</p>
+            <button class="btn-option" onclick="nextQ(true, 2)">[ SI ] Inflamación severa</button>
+            <button class="btn-option" onclick="nextQ(false, 2)">[ NO ] Solo un poco</button>
+        </div>
+
+        <div class="question-step" id="q3">
+            <h3 class="tech-font">Fase 3: CICLO DEL SUEÑO</h3>
+            <p style="font-size:1.1rem; line-height:1.4; margin-bottom:20px;">¿Te despiertas entre las 3:00 AM y 4:00 AM sin motivo aparente?</p>
+            <button class="btn-option" onclick="nextQ(true, 3)">[ SI ] Frecuentemente</button>
+            <button class="btn-option" onclick="nextQ(false, 3)">[ NO ] Duermo bien</button>
+        </div>
+
+        <div class="question-step" id="q4">
+            <h3 class="tech-font">Fase 4: ENERGÍA</h3>
+            <p style="font-size:1.1rem; line-height:1.4; margin-bottom:20px;">¿Sientes fatiga crónica o irritabilidad que no pasa con café?</p>
+            <button class="btn-option" onclick="nextQ(true, 4)">[ SI ] Agotamiento total</button>
+            <button class="btn-option" onclick="nextQ(false, 4)">[ NO ] Energía estable</button>
+        </div>
+
+        <div class="question-step" id="q5">
+            <h3 class="tech-font">Fase 5: HISTORIAL</h3>
+            <p style="font-size:1.1rem; line-height:1.4; margin-bottom:20px;">¿Has intentado dietas antes y sientes que tu cuerpo está "bloqueado"?</p>
+            <button class="btn-option" onclick="calculateResult(true)">[ SI ] Metabolismo lento</button>
+            <button class="btn-option" onclick="calculateResult(false)">[ NO ] Primera vez</button>
+        </div>
+
+        <div class="question-step" id="loading-screen" style="text-align: center; padding: 40px 0;">
+            <h3 class="tech-font" style="color:var(--neon-cyan); animation: pulse 1s infinite; font-size:1.2rem;">PROCESANDO DATOS...</h3>
+            <p style="color:#888;">Conectando con Bio-Lab...</p>
+            <div style="font-size: 3rem; margin-top:20px; animation:spin 2s linear infinite;">🧬</div>
+        </div>
+    </div>
+
+    <div id="res-critical" class="result-section result-critical">
+        <h2 class="text-critical" style="font-size:1.6rem; margin-bottom:10px;">⚠️ ALERTA: NIVEL CRÍTICO</h2>
+        <p style="font-size:1.1rem; margin-bottom:15px;"><strong>Diagnóstico:</strong> Inflamación Sistémica (+85%).</p>
+        <p style="color:#ccc; line-height:1.5;">Tu cuerpo está en "Modo Supervivencia". El cortisol está bloqueando la quema de grasa y acumulando tejido adiposo visceral.</p>
+        <hr style="border-color:#333; margin: 20px 0;">
+        <p class="tech-font" style="font-size:0.85rem;">SOLUCIÓN REQUERIDA: <span style="background:var(--neon-red); color:black; padding: 4px 8px; border-radius: 4px; font-weight:bold;">RESCATE METABÓLICO</span></p>
+    </div>
+
+    <div id="res-moderate" class="result-section result-moderate">
+        <h2 class="text-moderate" style="font-size:1.6rem; margin-bottom:10px;">🛡️ ALERTA: DESEQUILIBRIO</h2>
+        <p style="font-size:1.1rem; margin-bottom:15px;"><strong>Diagnóstico:</strong> Estrés Adrenal Detectado.</p>
+        <p style="color:#ccc; line-height:1.5;">Estás en la zona de riesgo. Si no actúas ahora, la "Cara de Luna" y la hinchazón abdominal se volverán crónicas.</p>
+        <hr style="border-color:#333; margin: 20px 0;">
+        <p class="tech-font" style="font-size:0.85rem;">SOLUCIÓN REQUERIDA: <span style="background:var(--neon-amber); color:black; padding: 4px 8px; border-radius: 4px; font-weight:bold;">ESCUDO PREVENTIVO</span></p>
+    </div>
+
+    <div id="res-light" class="result-section result-light">
+        <h2 class="text-light" style="font-size:1.6rem; margin-bottom:10px;">🔋 SISTEMA EN BALANCE</h2>
+        <p style="font-size:1.1rem; margin-bottom:15px;"><strong>Diagnóstico:</strong> Potencial de Optimización.</p>
+        <p style="color:#ccc; line-height:1.5;">Tu sistema resiste bien, pero el estrés moderno es invisible. Necesitas blindar tu metabolismo para mantener la performance.</p>
+        <hr style="border-color:#333; margin: 20px 0;">
+        <p class="tech-font" style="font-size:0.85rem;">SOLUCIÓN REQUERIDA: <span style="background:var(--neon-green); color:black; padding: 4px 8px; border-radius: 4px; font-weight:bold;">BLINDAJE BIO-HACKER</span></p>
+    </div>
+
+    <div id="offer-area" class="offer-container">
+        
+        <h2 class="tech-font" style="font-size:1.3rem; margin-bottom:10px;">EL ACCESO AL RADAR ESTÁ LIBERADO</h2>
+        <p style="color:var(--text-dim); font-size:0.9rem;">Obtén tu Prontuario Bio-Lab y desbloquea la Lista de 52 Alimentos Anti-Inflamatorios.</p>
+
+        <img src="radar_deusafit_hotmart.png" alt="Radar DeusaFit App" class="mockup-img">
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="f-icon">📲</div>
+                <div><span class="f-title" style="color:var(--neon-cyan)">SCANNER VFC</span><span class="f-desc">Mide tu nivel de estrés real usando la cámara.</span></div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="f-icon">🧮</div>
+                <div><span class="f-title" style="color:white">BIO-CALCULADORA TMB</span><span class="f-desc">Calcula tu tasa metabólica basal exacta.</span></div>
+            </div>
+            <div class="feature-card">
+                <div class="f-icon">📉</div>
+                <div><span class="f-title" style="color:var(--neon-red)">MODO CORTISOL</span><span class="f-desc">Ajuste hormonal para bajar la inflamación.</span></div>
+            </div>
+            <div class="feature-card">
+                <div class="f-icon">🍎</div>
+                <div><span class="f-title" style="color:var(--neon-green)">BIOCALC-NUTRI</span><span class="f-desc">Banco de datos con 50+ alimentos.</span></div>
+            </div>
+
+            <div class="feature-card">
+                <div class="f-icon">🧬</div>
+                <div><span class="f-title" style="color:var(--neon-green)">PRONTUARIO BIO-LAB</span><span class="f-desc">Tu diagnóstico visual y plan de acción.</span></div>
+            </div>
+            <div class="feature-card">
+                <div class="f-icon">🧘‍♀️</div>
+                <div><span class="f-title" style="color:var(--neon-purple)">PROTOCOLOS 360º</span><span class="f-desc">Rutinas para: Cara, Abdomen y Sueño.</span></div>
+            </div>
+            <div class="feature-card" style="border-color:var(--neon-amber);">
+                <div class="f-icon">🎁</div>
+                <div><span class="f-title" style="color:var(--neon-amber)">BONUS VIP:</span><span class="f-desc">PDF "Protocolo Bio-Hack" incluido gratis hoy.</span></div>
+            </div>
+        </div>
+
+        <div class="price-tag">
+            <div class="price-old" style="text-decoration: line-through; color:#666; font-size:1rem;">De $49.90 USD</div>
+            <div class="price-new">HOY: $14.99 USD</div>
+        </div>
+
+        <a href="https://pay.hotmart.com/C104299697T?checkoutMode=10" class="cta-btn">🔓 ACCEDER AL SISTEMA AHORA</a>
+        
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #888;"><span style="color:var(--neon-green)">●</span> Acceso Inmediato | Compra Segura</p>
+
+        <div class="dev-note-box">
+            <div class="dev-header" style="border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:15px; display:flex; align-items:center;">
+                <span class="dev-title">SYSTEM_LOG: MENSAJE DEL COMANDO</span>
+            </div>
+            <div class="dev-body" style="font-size:0.9rem; line-height:1.5; color:#ccc;">
+                <p>"Escucha, seré brutalmente honesta. <span class="highlight-text">No verás fotos de 'Antes y Después' falsas aquí.</span> Esta es tecnología militar, no magia.</p>
+                <p>El Radar V.14.5 acaba de salir del laboratorio. Estamos reclutando el <strong>ALPHA SQUAD</strong> (Pioneras) para calibrar el algoritmo.</p>
+                <p>A cambio de tu confianza ciega en la tecnología, derrumbé el precio. Pero aviso: <span style="color:var(--neon-red); font-weight:bold;">Cuando los primeros datos lleguen, el valor se duplicará.</span></p>
+                <p>No buscamos seguidores. <strong>Buscamos pioneros.</strong> Lo tomas o lo dejas."</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p style="font-weight:bold; color:white;">RADAR DEUSAFIT © 2026</p>
+        <p style="margin-top:15px;">
+            <a href="#">Políticas de Privacidad</a> | 
+            <a href="#">Términos y Condiciones</a> | 
+            <a href="#">Descargo de Responsabilidad</a>
+        </p>
+        <p class="disclaimer">
+            Este sitio no es parte de Facebook o Facebook Inc. Además, este sitio no está respaldado por Facebook de ninguna manera. FACEBOOK es una marca registrada de FACEBOOK, Inc.
+        </p>
+    </footer>
+
+</div>
+
+<div id="exit-popup" class="popup-overlay">
+    <div class="popup-box">
+        <span class="close-popup" onclick="closePopup()" style="position:absolute; top:15px; right:20px; font-size:2rem; cursor:pointer; color:#666;">×</span>
+        
+        <h2 style="color:var(--neon-cyan); margin-bottom: 10px; font-family:'Orbitron', sans-serif; font-size:1.6rem;">¡ESPERA! ✋</h2>
+        <p style="font-size: 0.95rem; color: #ccc; margin-bottom:20px;">No salgas de aquí con las manos vacías.</p>
+        
+        <div style="background:rgba(0,243,255,0.05); border:1px solid var(--neon-cyan); padding:15px; margin:20px 0; border-radius:10px;">
+            <p style="color:white; font-size: 0.75rem; margin:0; letter-spacing:1px; text-transform:uppercase;">🎁 TU REGALO RESERVADO:</p>
+            <h3 style="color:white; margin:10px 0; font-size:1.2rem; font-family:'Orbitron', sans-serif;">DRENAJE BIO-FACIAL</h3>
+            <p style="color:var(--neon-green); font-size:0.8rem; margin:0; font-weight:bold;">PROTOCOLO PDF (GRATIS HOY)</p>
+        </div>
+
+        <p style="font-size: 0.85rem; color: #888; margin-bottom: 5px; text-align: left;">
+            🔒 Para evitar bots, enviamos el acceso a tu <strong>WhatsApp Personal</strong>.
+        </p>
+
+        <form id="lead-form" onsubmit="submitLead(event)">
+            <div class="input-group">
+                <input type="tel" id="whatsapp" class="lead-input" placeholder="Tu WhatsApp (Ej: +52 1 55...)" required>
+            </div>
+            
+            <button type="submit" class="btn-submit">📥 ENVIARME EL PROTOCOLO</button>
+        </form>
+
+        <p style="font-size: 0.7rem; color: #555; margin-top: 15px;">🔒 Tus datos están blindados. Zero Spam.</p>
+    </div>
+</div>
+
+<script>
+    // --- CONFIGURAÇÃO ---
+    let score = 0;
+    const totalQuestions = 5;
+    let currentDiagnosis = "PENDIENTE"; 
+    
+    // URL do Webhook
+    const webhookURL = "https://script.google.com/macros/s/AKfycbzviS4Ud4SRQD46bz0f6d8NojNLz1mK-hjneXU_pARsCxP1piHM4ft4f1Fmkw6S3Z4M/exec";
+
+    // --- NAVEGAÇÃO DO QUIZ ---
+    function nextQ(isYes, currentStep) {
+        if (isYes) score++;
+        let progress = ((currentStep + 1) / totalQuestions) * 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+        document.getElementById('q' + currentStep).classList.remove('active');
+        if (currentStep < totalQuestions) {
+            document.getElementById('q' + (currentStep + 1)).classList.add('active');
+        }
+    }
+
+    // --- CÁLCULO DE RESULTADO ---
+    function calculateResult(isYes) {
+        if (isYes) score++;
+        document.getElementById('q5').classList.remove('active');
+        document.getElementById('loading-screen').classList.add('active');
+
+        // Define Diagnóstico
+        let resultType = "";
+        if (score >= 4) {
+            resultType = "CRITICAL";
+            currentDiagnosis = "CRITICO (EMERGENCIA)";
+        } else if (score >= 2) {
+            resultType = "MODERATE";
+            currentDiagnosis = "MODERADO (ALERTA)";
+        } else {
+            resultType = "LIGHT";
+            // CORREÇÃO ORTOGRÁFICA: OPTIMIZACIÓN (ES) NÃO OTIMIZACAO (PT)
+            currentDiagnosis = "LEVE (OPTIMIZACIÓN)";
+        }
+
+        setTimeout(() => {
+            document.getElementById('quiz-container').style.display = 'none';
+            showResult(resultType);
+        }, 2500);
+    }
+
+    function showResult(type) {
+        if (type === "CRITICAL") document.getElementById('res-critical').style.display = 'block';
+        else if (type === "MODERATE") document.getElementById('res-moderate').style.display = 'block';
+        else document.getElementById('res-light').style.display = 'block';
+
+        document.getElementById('offer-area').style.display = 'block';
+        document.getElementById('offer-area').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // --- POPUP INTELIGENTE (ATUALIZADO: 90 SEGUNDOS) ---
+    let popupShown = false;
+    let idleTimer;
+    
+    // Trigger Desktop (Saída do Mouse)
+    document.addEventListener("mouseleave", (e) => { 
+        if (e.clientY < 0 && !popupShown) showPopup(); 
+    });
+    
+    // Trigger Mobile (Tempo Estendido para 90 segundos)
+    setTimeout(() => { 
+        if(!popupShown) showPopup(); 
+    }, 90000); 
+
+    function showPopup() {
+        if(popupShown) return;
+        document.getElementById('exit-popup').style.display = 'flex';
+        popupShown = true;
+    }
+    function closePopup() { document.getElementById('exit-popup').style.display = 'none'; }
+
+    // --- CORREÇÃO FINAL DA CAPTURA (ESTRATÉGIA REDUNDANTE) ---
+    function submitLead(e) {
+        e.preventDefault();
+        
+        const phone = document.getElementById('whatsapp').value;
+        const btn = document.querySelector('.btn-submit');
+        
+        if(phone.length < 8) {
+            alert("Por favor, ingresa un número válido.");
+            return;
+        }
+
+        btn.innerHTML = "⏳ CONECTANDO...";
+        btn.style.opacity = "0.7";
+
+        // TÁTICA DE GUERRA: Enviar dados redundantes para garantir leitura
+        const formData = new FormData();
+        
+        // 1. Padrão Planilha (Colunas exatas)
+        formData.append('Data', new Date().toLocaleString());
+        
+        // 2. Backup de Segurança: Coloca o Diagnóstico no NOME também
+        const nomeComposto = `LEAD_PDF | ${currentDiagnosis}`;
+        formData.append('Nome', nomeComposto);
+        formData.append('nome', nomeComposto); 
+        
+        // 3. Telefone em várias chaves possíveis
+        formData.append('WHATSAPP', phone);
+        formData.append('whatsapp', phone);
+        formData.append('Telefone', phone);
+        
+        // 4. Diagnóstico explícito
+        formData.append('DIAGNÓSTICO', currentDiagnosis);
+        formData.append('diagnostico', currentDiagnosis);
+
+        // Envio
+        fetch(webhookURL, { method: 'POST', body: formData, mode: 'no-cors' })
+        .then(() => {
+            btn.innerHTML = "✅ ACCESO AUTORIZADO";
+            btn.style.background = "white";
+            btn.style.color = "black";
+            setTimeout(() => { window.location.href = "Protocolo_Zero_Hinchazon.pdf"; }, 1500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            window.location.href = "Protocolo_Zero_Hinchazon.pdf";
+        });
+    }
+</script>
+
+</body>
+</html>
