@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-M6Z5QKPQ');</script>
     <title>Radar DeusaFit | Bio-Scanner VFC</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     
@@ -75,20 +81,10 @@
             position: relative;
         }
         
-        .vsl-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle, rgba(20,20,20,1) 0%, rgba(0,0,0,1) 100%);
-            cursor: pointer;
-        }
-        .play-btn {
-            font-size: 4rem;
-            color: white;
-            filter: drop-shadow(0 0 10px var(--neon-cyan));
-            animation: pulse 2s infinite;
+        /* Wistia Player Overlay Fix */
+        wistia-player {
+            width: 100% !important;
+            height: 100% !important;
         }
 
         /* --- QUIZ SECTION --- */
@@ -222,6 +218,26 @@
             box-sizing: border-box;
         }
 
+        /* --- UPDATE: BOTÃO DE DECLÍNIO ENGROSSADO --- */
+        .btn-decline {
+            display: block;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 0.95rem;
+            color: #ccc;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-decline:hover {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: white;
+        }
+
         /* --- DEV NOTE --- */
         .dev-note-box {
             background: #000;
@@ -236,7 +252,7 @@
         .dev-title { color: var(--neon-green); font-size: 0.9rem; letter-spacing: 1px; font-weight: 900; }
         .highlight-text { color: white; background: rgba(10, 255, 0, 0.15); padding: 2px 5px; border-radius: 4px; font-weight: bold;}
 
-        /* --- POPUP --- */
+        /* --- POPUPS / MODAIS --- */
         .popup-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 9999;
@@ -247,6 +263,9 @@
             width: 90%; max-width: 380px; text-align: center; border-radius: 12px;
             box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
             position: relative;
+            animation: fadeIn 0.3s;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         .input-group { margin: 15px 0; text-align: left; }
@@ -264,6 +283,37 @@
             border-radius: 8px; font-size: 1rem;
         }
 
+        /* --- NOVO: ESTILOS DO DOWNSELL --- */
+        .downsell-img {
+            width: 100%;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 20px rgba(189, 0, 255, 0.2);
+        }
+        .downsell-price {
+            font-size: 2.2rem;
+            color: var(--neon-amber);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            margin: 15px 0;
+            text-shadow: 0 0 15px rgba(255, 174, 0, 0.4);
+        }
+        .btn-buy-downsell {
+            display: block; width: 100%; padding: 20px; 
+            background: linear-gradient(90deg, #ffae00, #ff5e00); 
+            color: white; font-weight: 900; border: none; cursor: pointer;
+            font-family: 'Orbitron', sans-serif; text-transform: uppercase;
+            border-radius: 50px; font-size: 1.1rem; text-decoration: none;
+            box-shadow: 0 0 20px rgba(255, 174, 0, 0.4);
+            animation: pulse 2s infinite; margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .downsell-list {
+            text-align: left; font-size: 0.85rem; color: #ccc; margin-bottom: 15px;
+            line-height: 1.6; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;
+        }
+
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -276,6 +326,8 @@
 </head>
 <body>
 
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M6Z5QKPQ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="container">
 
     <div class="logo-area">
@@ -284,10 +336,12 @@
     </div>
 
     <div class="vsl-container">
-        <div class="vsl-placeholder" onclick="alert('Player de Video: Coloque o link aqui')">
-            <div class="play-btn">▶</div>
-        </div>
+        <script src="https://fast.wistia.com/player.js" async></script>
+        <script src="https://fast.wistia.com/embed/l4ni4q43bc.js" async type="module"></script>
+        <style>wistia-player[media-id='l4ni4q43bc']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/l4ni4q43bc/swatch'); display: block; filter: blur(5px); padding-top:177.78%; }</style>
+        <wistia-player media-id="l4ni4q43bc" aspect="0.5625"></wistia-player>
     </div>
+    
     <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: -20px; margin-bottom: 30px;">
         🔊 <span style="font-style: italic;">Activa el sonido para el briefing de la misión.</span>
     </p>
@@ -395,7 +449,7 @@
             </div>
             <div class="feature-card">
                 <div class="f-icon">🧘‍♀️</div>
-                <div><span class="f-title" style="color:var(--neon-purple)">PROTOCOLOS 360º</span><span class="f-desc">Rutinas para: Cara, Abdomen y Sueño.</span></div>
+                <div><span class="f-title" style="color:var(--neon-purple)">PROTOCOLOS 360º</span><span class="f-desc">Rutinas para Rostro, Abdomen y Sueño.</span></div>
             </div>
             <div class="feature-card" style="border-color:var(--neon-amber);">
                 <div class="f-icon">🎁</div>
@@ -410,6 +464,10 @@
 
         <a href="https://pay.hotmart.com/C104299697T?checkoutMode=10" class="cta-btn">🔓 ACCEDER AL SISTEMA AHORA</a>
         
+        <div class="btn-decline" onclick="showPopup()">
+            🎁 ¡Espera! Prefiero solo el <strong>Drenaje Facial (Gratis)</strong>
+        </div>
+
         <p style="margin-top: 15px; font-size: 0.8rem; color: #888;"><span style="color:var(--neon-green)">●</span> Acceso Inmediato | Compra Segura</p>
 
         <div class="dev-note-box">
@@ -443,8 +501,8 @@
     <div class="popup-box">
         <span class="close-popup" onclick="closePopup()" style="position:absolute; top:15px; right:20px; font-size:2rem; cursor:pointer; color:#666;">×</span>
         
-        <h2 style="color:var(--neon-cyan); margin-bottom: 10px; font-family:'Orbitron', sans-serif; font-size:1.6rem;">¡ESPERA! ✋</h2>
-        <p style="font-size: 0.95rem; color: #ccc; margin-bottom:20px;">No salgas de aquí con las manos vacías.</p>
+        <h2 style="color:var(--neon-cyan); margin-bottom: 10px; font-family:'Orbitron', sans-serif; font-size:1.6rem;">¡ACCESO CONCEDIDO! 🔓</h2>
+        <p style="font-size: 0.95rem; color: #ccc; margin-bottom:20px;">Has tomado una decisión inteligente.</p>
         
         <div style="background:rgba(0,243,255,0.05); border:1px solid var(--neon-cyan); padding:15px; margin:20px 0; border-radius:10px;">
             <p style="color:white; font-size: 0.75rem; margin:0; letter-spacing:1px; text-transform:uppercase;">🎁 TU REGALO RESERVADO:</p>
@@ -468,8 +526,43 @@
     </div>
 </div>
 
+<div id="downsell-popup" class="popup-overlay">
+    <div class="popup-box" style="border-color: var(--neon-amber);">
+        <span class="close-popup" onclick="closeDownsell()" style="position:absolute; top:10px; right:15px; font-size:2rem; cursor:pointer; color:#666;">×</span>
+        
+        <div style="background: rgba(10, 255, 0, 0.1); border: 1px solid var(--neon-green); padding: 8px; border-radius: 6px; margin-bottom: 15px;">
+            <p style="color: var(--neon-green); font-size: 0.8rem; margin: 0; font-weight: bold;">🟢 ¡Éxito! Tu regalo descargará en breve.</p>
+        </div>
+
+        <h2 style="color:white; font-size:1.4rem; margin-bottom: 5px; font-family:'Orbitron', sans-serif;">Pero ESPERA...</h2>
+        <p style="font-size: 0.85rem; color: #ccc; margin-bottom: 15px;">Acelera tus resultados 10X y desinflama hoy mismo con nuestro Kit de Rescate Casero.</p>
+        
+        <img src="capa_guasha_latam.png" alt="Método Gua Sha Casero" class="downsell-img">
+
+        <div class="downsell-list">
+            <p style="margin: 5px 0;">✅ <strong>Método Gua Sha Casero (Cuchara)</strong></p>
+            <p style="margin: 5px 0;">🎁 <strong>Bono 1:</strong> Protocolo Cara de Luna</p>
+            <p style="margin: 5px 0;">🎁 <strong>Bono 2:</strong> Té "Apaga-Cortisol"</p>
+        </div>
+
+        <div class="downsell-price">SOLO $4.99</div>
+
+        <a href="https://pay.hotmart.com/G104550565F" class="btn-buy-downsell">👉 ¡SÍ! QUIERO MI KIT AHORA 👈</a>
+
+        <p style="font-size: 0.75rem; color: #888; cursor: pointer; text-decoration: underline;" onclick="closeDownsell()">
+            No, gracias. Prefiero seguir lidiando con la hinchazón por mi cuenta.
+        </p>
+    </div>
+</div>
+
 <script>
-    // --- CONFIGURAÇÃO ---
+    // --- ⚠️ CONFIGURAÇÃO CRÍTICA DO DRIVE ⚠️ ---
+    const LINK_DO_DRIVE = "https://drive.google.com/file/d/1Jq9i__nfS1cTAA1YKJEPGlVtcbW4gnbM/view?usp=drivesdk"; 
+    
+    // Inicializa o DataLayer se não existir
+    window.dataLayer = window.dataLayer || [];
+
+    // --- CONFIGURAÇÃO GERAL ---
     let score = 0;
     const totalQuestions = 5;
     let currentDiagnosis = "PENDIENTE"; 
@@ -480,6 +573,12 @@
     // --- NAVEGAÇÃO DO QUIZ ---
     function nextQ(isYes, currentStep) {
         if (isYes) score++;
+        window.dataLayer.push({
+            'event': 'quiz_step',
+            'step_number': currentStep,
+            'response': isYes ? 'Sim' : 'Nao'
+        });
+
         let progress = ((currentStep + 1) / totalQuestions) * 100;
         document.getElementById('progress-bar').style.width = progress + '%';
         document.getElementById('q' + currentStep).classList.remove('active');
@@ -494,19 +593,19 @@
         document.getElementById('q5').classList.remove('active');
         document.getElementById('loading-screen').classList.add('active');
 
-        // Define Diagnóstico
         let resultType = "";
         if (score >= 4) {
-            resultType = "CRITICAL";
-            currentDiagnosis = "CRITICO (EMERGENCIA)";
+            resultType = "CRITICAL"; currentDiagnosis = "CRITICO";
         } else if (score >= 2) {
-            resultType = "MODERATE";
-            currentDiagnosis = "MODERADO (ALERTA)";
+            resultType = "MODERATE"; currentDiagnosis = "MODERADO";
         } else {
-            resultType = "LIGHT";
-            // CORREÇÃO ORTOGRÁFICA: OPTIMIZACIÓN (ES) NÃO OTIMIZACAO (PT)
-            currentDiagnosis = "LEVE (OPTIMIZACIÓN)";
+            resultType = "LIGHT"; currentDiagnosis = "LEVE";
         }
+        
+        window.dataLayer.push({
+            'event': 'diagnosis_generated',
+            'diagnosis_type': currentDiagnosis
+        });
 
         setTimeout(() => {
             document.getElementById('quiz-container').style.display = 'none';
@@ -521,30 +620,25 @@
 
         document.getElementById('offer-area').style.display = 'block';
         document.getElementById('offer-area').scrollIntoView({ behavior: 'smooth' });
+
+        window.dataLayer.push({ 'event': 'view_offer_section' });
     }
 
-    // --- POPUP INTELIGENTE (ATUALIZADO: 90 SEGUNDOS) ---
-    let popupShown = false;
-    let idleTimer;
-    
-    // Trigger Desktop (Saída do Mouse)
-    document.addEventListener("mouseleave", (e) => { 
-        if (e.clientY < 0 && !popupShown) showPopup(); 
-    });
-    
-    // Trigger Mobile (Tempo Estendido para 90 segundos)
-    setTimeout(() => { 
-        if(!popupShown) showPopup(); 
-    }, 90000); 
-
+    // --- LÓGICA DOS MODAIS ---
     function showPopup() {
-        if(popupShown) return;
         document.getElementById('exit-popup').style.display = 'flex';
-        popupShown = true;
+        window.dataLayer.push({ 'event': 'click_downsell_pdf' });
     }
-    function closePopup() { document.getElementById('exit-popup').style.display = 'none'; }
+    function closePopup() { 
+        document.getElementById('exit-popup').style.display = 'none'; 
+    }
+    
+    // Fechar Modal do Downsell
+    function closeDownsell() {
+        document.getElementById('downsell-popup').style.display = 'none';
+    }
 
-    // --- CORREÇÃO FINAL DA CAPTURA (ESTRATÉGIA REDUNDANTE) ---
+    // --- ENVIO DO LEAD & ATIVAÇÃO DO DOWNSELL ---
     function submitLead(e) {
         e.preventDefault();
         
@@ -559,37 +653,48 @@
         btn.innerHTML = "⏳ CONECTANDO...";
         btn.style.opacity = "0.7";
 
-        // TÁTICA DE GUERRA: Enviar dados redundantes para garantir leitura
+        window.dataLayer.push({ 'event': 'lead_submission_attempt' });
+
         const formData = new FormData();
-        
-        // 1. Padrão Planilha (Colunas exatas)
         formData.append('Data', new Date().toLocaleString());
-        
-        // 2. Backup de Segurança: Coloca o Diagnóstico no NOME também
         const nomeComposto = `LEAD_PDF | ${currentDiagnosis}`;
         formData.append('Nome', nomeComposto);
         formData.append('nome', nomeComposto); 
-        
-        // 3. Telefone em várias chaves possíveis
         formData.append('WHATSAPP', phone);
         formData.append('whatsapp', phone);
         formData.append('Telefone', phone);
-        
-        // 4. Diagnóstico explícito
         formData.append('DIAGNÓSTICO', currentDiagnosis);
         formData.append('diagnostico', currentDiagnosis);
 
-        // Envio
         fetch(webhookURL, { method: 'POST', body: formData, mode: 'no-cors' })
         .then(() => {
             btn.innerHTML = "✅ ACCESO AUTORIZADO";
             btn.style.background = "white";
             btn.style.color = "black";
-            setTimeout(() => { window.location.href = "Protocolo_Zero_Hinchazon.pdf"; }, 1500);
+            
+            window.dataLayer.push({
+                'event': 'generate_lead_success',
+                'lead_type': 'pdf_downsell'
+            });
+
+            // O PULO DO GATO: Abre o PDF grátis em nova aba e mostra o Downsell na tela atual
+            setTimeout(() => { 
+                closePopup(); // Esconde modal do zap
+                window.open(LINK_DO_DRIVE, '_blank'); // Força o download/abertura do PDF numa nova aba
+                document.getElementById('downsell-popup').style.display = 'flex'; // Exibe a oferta $4.99
+                window.dataLayer.push({ 'event': 'view_downsell_offer_popup' }); // Avisa o GTM
+            }, 1500);
         })
         .catch(error => {
             console.error('Error:', error);
-            window.location.href = "Protocolo_Zero_Hinchazon.pdf";
+            window.dataLayer.push({ 'event': 'generate_lead_fallback' });
+            // Executa o mesmo fluxo de salvação em caso de erro da planilha
+            setTimeout(() => { 
+                closePopup();
+                window.open(LINK_DO_DRIVE, '_blank');
+                document.getElementById('downsell-popup').style.display = 'flex';
+                window.dataLayer.push({ 'event': 'view_downsell_offer_popup' });
+            }, 1000);
         });
     }
 </script>
